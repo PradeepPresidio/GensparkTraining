@@ -1,0 +1,96 @@
+One person can have multiple fabric items with same or different measurements. Tailored dress is populated later.Bill contains reference to person and list of Tailored_dress objects
+
+Person
+person_id
+name
+phone_number
+address
+(other person info)
+
+Fabric
+fabric_id
+person_id
+fabric_type
+fabric_length
+pickup_date
+(other fabric fields)
+
+Measurement
+measurement_id
+person_id
+fabric_id
+length
+(other measurement fields)
+
+Tailored_dress
+person_id
+fabric_id
+dress_id
+price_of_dress
+dress_made_on_date
+dress_delivered_on_date
+
+
+Bill
+person_id
+date
+list_of_Tailored_dress_ids
+other_charges
+net_total
+
+soln
+CustomerStatusMaster
+ Id, StatusMessage(Example - {id-1,StatusMessage-"Available"})  //for soft delete
+
+OrderStatusMaster
+ Id, StatusMessage(Example - {id-1,StatusMessage-"Yet to be stitched"})
+
+CityMaster
+ Id, CityName, StateId
+
+StateMaster
+ Id, StateName
+
+TypeMaster
+ Id, Name, status
+
+Items_Master
+ Id, Name
+
+FabricMaster
+  Id, Name
+
+ITems_Fabric
+  Id, Fabric_Id, Item_Id, Price
+
+Address
+  Id, Doornumber, Street/Apartmnet Name, Area, Zip code, CityId
+
+Customer_Address
+  Id, Name, Address_Id, Customer_Id
+ 
+Customer
+ Id, Name, Phone, Email,  Status_Id 
+
+
+SizeChart
+ Id, Measurement(JSON)
+
+Order
+ OrnerNumber, OrderDate, Customer_Id,  Amount, PicupId, Order_Status, Remarks, Patmnet_Id
+
+Payment_Datails
+  Id, Order_Number, Type, Amount, Status
+
+Order_Details
+  Order_Details_Number, Order_Number, Item_Fabric_Id, quantity, Price,  Size_Id
+
+PickUp_And_Delivery_Details
+  Id, Date, Order_Numebr, Status, actual_Date, ScheduledDate, Address_Id, Item_Fabric_id
+
+Refund_Table
+  Refund_id
+  Order_id
+  refund_initiated_date
+  refund_completed_date
+  remarks
