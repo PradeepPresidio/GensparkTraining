@@ -1,0 +1,16 @@
+public static string timeConversion(string s)
+    {
+        bool is_AM = false;
+        int len = s.Length;
+        if(s[len-2]=='A')
+        is_AM = true;
+        int hour = int.Parse(s.Substring(0,2));
+        int minute = int.Parse(s.Substring(3,2));
+        int second = int.Parse(s.Substring(6,2));
+        if(hour == 12 && is_AM)
+        hour = 0;
+        else if(!is_AM && hour!=12)
+        hour+=12;
+        string result = $"{(hour.ToString()).PadLeft(2,'0')}:{minute.ToString().PadLeft(2,'0')}:{second.ToString().PadLeft(2,'0')}";
+        return result;
+    }

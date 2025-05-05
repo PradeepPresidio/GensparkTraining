@@ -1,0 +1,17 @@
+    public static void plusMinus(List<int> arr)
+    {
+        double p_count = 0,z_count = 0,n_count = 0;
+        double size = arr.Count;
+        foreach(int x in arr){
+            if(x==0) z_count++;
+            if(x<0) n_count++;
+            if(x>0) p_count++;
+        }
+        double p_ratio = (double)((p_count*100)/size)/100;
+        double n_ratio = (double)((n_count*100)/size)/100;
+        double z_ratio = (double)((z_count*100)/size)/100;
+        
+        Console.WriteLine($"{p_ratio}\n{n_ratio}\n{z_ratio}");        
+    }       
+
+}

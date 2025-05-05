@@ -1,0 +1,21 @@
+ public static List<int> breakingRecords(List<int> scores)
+    {
+        int max_so_far = scores[0];
+        int min_so_far = scores[0];
+        int min_count = 0,max_count = 0;
+        for(int i = 1;i<scores.Count;i++)
+        {
+            if(scores[i]>max_so_far)
+            {
+            max_so_far = scores[i];
+            max_count++;                
+            }
+            if(scores[i]<min_so_far)
+            {
+                min_so_far= scores[i];
+                min_count++;
+            }
+        }
+        List<int> result = [max_count,min_count];
+        return result;
+    }

@@ -1,0 +1,38 @@
+public static int GCD(int a, int b)
+{
+    while (b != 0)
+    {
+        int temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
+}
+
+public static int LCM(int a, int b)
+{
+    return (a * b) / GCD(a, b);
+}
+    public static int getTotalX(List<int> a, List<int> b)
+{
+    int lcm = a[0];
+    for (int i = 1; i < a.Count; i++)
+    {
+        lcm = LCM(lcm, a[i]);
+    }
+    int gcd = b[0];
+    for (int i = 1; i < b.Count; i++)
+    {
+        gcd = GCD(gcd, b[i]);
+    }
+    int count = 0;
+    for (int i = lcm; i <= gcd; i += lcm)
+    {
+        if (gcd % i == 0)
+        {
+            count++;
+        }
+    }
+
+    return count;
+}

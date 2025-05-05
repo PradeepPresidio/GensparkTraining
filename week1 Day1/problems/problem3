@@ -1,0 +1,7 @@
+public static void miniMaxSum(List<int> arr)
+    {
+        arr.Sort();
+        long min = (long)arr[0]+arr[1]+arr[2]+arr[3]; 
+        long max = (long)arr[1]+arr[2]+arr[3]+arr[4]; 
+        Console.WriteLine($"{min} {max}");
+    }

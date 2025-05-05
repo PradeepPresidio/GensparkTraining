@@ -1,0 +1,58 @@
+Master Status
+	status_id
+	Status_value {"Rented","Returned","not yet returned,past due date"}
+
+Person
+	person_id
+	phone_number
+	name
+	membership_plan (Gold,Bronze)
+	favourite_movie_category
+
+Master Movie Format
+	format_id
+	format_value {"VHS","DVD"}
+
+Master Movie Category
+	category_id
+	category_data {"Action","Adventure"}
+
+Master Movie Library
+	movie_id
+	movie_name
+	format_id
+	category_id
+	rental_price
+
+Dependents
+	dependent_id
+	person_id
+	dependent_name
+
+// prevent multiple bronze or dependent entries if status is pending 
+Rental Ledger
+	rental_id
+	person_id (can be null)
+	dependent_id (can be null)
+	order_id
+	is_dependent
+	movie_id
+	rented_on
+	to_be_returned_on
+	rental_price
+	status
+
+Order Details
+	order_id
+	billed_date
+	additional_charges
+	total
+	is_payment_successful
+
+Refund Details
+	refund_id
+	order_id
+	refund_initiated_on
+	redund_completed_on
+	remarks
+	

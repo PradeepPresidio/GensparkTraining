@@ -1,0 +1,16 @@
+public static string kangaroo(int x1, int v1, int x2, int v2)
+    {
+        bool isx1Behind = false;
+        if(x1 < x2)
+        {
+            isx1Behind = true;
+        }
+        while((isx1Behind && x1<=x2) || (!isx1Behind && x2<=x1))
+        {
+            if(x1==x2)
+            return "YES";
+            x1+=v1;
+            x2+=v2;
+        }
+        return "NO";
+    }
