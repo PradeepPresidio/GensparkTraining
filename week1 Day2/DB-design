@@ -1,0 +1,183 @@
+Design the database for a shop which sells products
+Points for consideration
+  1) One product can be supplied by many suppliers
+  2) One supplier can supply many products
+  3) All customers details have to present
+  4) A customer can buy more than one product in every purchase
+  5) Bill for every purchase has to be stored
+  6) These are just details of one shop
+  //my solution
+Master Products
+	prod_id
+	prod_name
+	price
+
+Master Suppliers
+	sup_id
+	sup_name
+
+Products Suppliers //Because many-many relationship
+	prod_id
+	sup_id
+
+Customer
+	cust_id
+	cust_name
+	phone_number
+
+bill
+	bill_id
+	total_price
+	sup_id
+
+Orders
+	order_id
+	cust_id
+	prod_id
+	bill_id
+	price
+
+// instructor solution
+Design the database for a shop which sells products
+
+Points for consideration
+
+  1) One product can be supplied by many suppliers
+
+  2) One supplier can supply many products
+
+  3) All customers details have to present
+
+  4) A customer can buy more than one product in every purchase
+
+  5) Bill for every purchase has to be stored
+
+  6) These are just details of one shop
+ 
+categories
+
+id, name, status
+ 
+country
+
+id, name
+ 
+state
+
+id, name, country_id
+ 
+City
+
+id, name, state_id
+ 
+area
+
+zipcode, name, city_id
+ 
+address
+
+id, door_number, addressline1, zipcode
+ 
+supplier
+
+id, name, contact_person, phone, email, address_id, status
+ 
+product
+
+id, Name, unit_price, quantity, description, image
+ 
+product_supplier
+
+transaction_id, product_id, supplier_id, date_of_supply, quantity,
+ 
+Customer
+
+id, Name, Phone, age, address_id
+ 
+order
+
+  order_number, customer_id, Date_of_order, amount, order_status
+ 
+order_details
+
+  id, order_number, product_id, quantity, unit_price
+ 
+// my DDL for solution
+Create table Categories(
+id varchar(10) primary key,
+name varchar(10) not null,
+status varchar(10) not null
+);
+
+Create table Country(
+id varchar(10) primary key,
+name varchar(10) not null 
+);
+Create table State(
+id varchar(10) primary key,
+name varchar(100) not null,
+country_id varchar(10) references Country(id)
+);
+Create table City(
+id varchar(10) primary key,
+name varchar(100) not null,
+state_id varchar(10) references State(id)
+);
+Create table Area(
+zipcode varchar(10) primary key,
+name varchar(100) not null,
+city_id varchar(10) references City(id)
+);
+Create table Address(
+id varchar(10) primary key,
+door_number varchar(10),
+addressLine1 varchar(100),
+addressLine2 varchar(100),
+zipcode varchar(10) references Area(zipcode)
+);
+Create table Supplier(
+id varchar(10) primary key,
+name varchar(100) not null,
+contact_person varchar(100),
+phone varchar(20),
+email varchar(100),
+address_id varchar(10) references Address(id),
+status varchar(10) references Categories(id)
+);
+
+Create table Product(
+id varchar(10) primary key,
+name varchar(100) not null,
+unit_price float not null,
+quantity int not null,
+description varchar(100),
+image varchar(100)
+);
+Create table ProductSupplier(
+transaction_id varchar(10) primary key,
+product_id varchar(10) references Product(id),
+supplier_id varchar(10) references Supplier(id),
+date_of_supply datetime,
+quantity int
+);
+Create table Customer(
+id varchar(10) primary key,
+name varchar(100) not null,
+phone varchar(20) not null,
+age int,
+address_id varchar(10) references Address(id)
+);
+Create table Orders(
+order_number varchar(10) primary key,
+customer_id varchar(10) references Customer(id),
+date_of_order datetime,
+amount float,
+order_status varchar(10) references Categories(id)
+);
+Create table Order_details(
+id varchar(10) primary key,
+order_number varchar(10) references Orders(order_number),
+product_id varchar(10) references Product(id),
+quantity int,
+unit_price float
+);
