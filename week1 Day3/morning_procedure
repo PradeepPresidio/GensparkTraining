@@ -1,0 +1,93 @@
+create procedure proc_FirstProcedure
+as 
+begin
+	print 'Hello World!'
+end
+Go
+exec proc_FirstProcedure
+
+create table Products(
+id int identity(1,1) constraint pk_productId primary key,
+name varchar(100) not null,
+details nvarchar(max))
+
+go
+create or alter proc proc_InsertProduct(@pname nvarchar(100),@pdetails nvarchar(max))
+as 
+begin
+	insert into Products(name,details) values(@pname,@pdetails)
+end
+go
+proc_InsertProduct 'Laptop','{"brand" : "asus","spec":{"ram":"16GB"}}'
+go
+select * from Products
+
+select JSON_QUERY(details,'$.spec') from Products
+go
+create procedure UpdateProductRam(@pram varchar(max),@pid varchar(max))
+as 
+begin
+	update products  set details =  JSON_MODIFY(details,'$.spec.ram',@pram) where products.id = @pid
+end
+go
+
+UpdateProductRam '12GB',3
+select * from Products
+
+select id,name, JSON_VALUE(details,'$.brand') from Products
+
+
+create table BulkTable(
+userId int,
+id int,
+title nvarchar(max)
+);
+declare @jsonData nvarchar(max) = '[
+  {
+    "userId": 1,
+    "id": 1,
+    "title": "delectus aut autem"
+  },
+  {
+    "userId": 2,
+    "id": 2,
+    "title": "sadf sarhasdfg hewsaf"
+  }
+]'
+insert into BulkTable(userId, id, title) 
+select userId, id, title
+from openjson(@jsonData) 
+with (
+  userId int,
+  id int,
+  title nvarchar(max)
+)
+
+go
+ create proc proc_BulInsertPosts(@jsondata nvarchar(max))
+  as
+  begin
+		insert into BulkTable(userId,id,title)
+	  select userId,id,title from openjson(@jsondata)
+	  with (userId int,id int, title varchar(100))
+  end
+
+  --delete from BulkTable
+go
+  proc_BulInsertPosts '
+[
+  {
+    "userId": 1,
+    "id": 1,
+    "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit"
+  },
+  {
+    "userId": 1,
+    "id": 2,
+    "title": "qui est esse"
+  }]'
+  go
+
+select * from BulkTable
+
+select * from products where try_cast(JSON_VALUE(details,'$.spec.ram') as nvarchar(20)) = '12GB'

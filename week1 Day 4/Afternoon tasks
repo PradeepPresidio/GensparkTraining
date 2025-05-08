@@ -1,0 +1,105 @@
+use master
+select * from dbo.customers
+select * from dbo.employees
+select * from dbo.orders
+select * from products
+select * from categories
+select * from suppliers
+select * from orders
+select * from [order Details]
+--1) List all orders with the customer name and the employee who handled the order.
+--(Join Orders, Customers, and Employees)
+
+select dbo.customers.ContactName,concat(dbo.employees.LastName,' ',dbo.employees.Firstname) employeeName from dbo.customers join dbo.Orders 
+on dbo.customers.customerID = dbo.orders.customerID
+join employees 
+on dbo.orders.EmployeeID = dbo.employees.EmployeeID
+
+--2) Get a list of products along with their category and supplier name.
+--(Join Products, Categories, and Suppliers)
+
+select Products.ProductName,categories.CategoryName,Suppliers.ContactName from categories
+join Products on Products.categoryId = categories.categoryId
+join Suppliers on Suppliers.supplierId = products.SupplierID
+
+--3) Show all orders and the products included in each order with quantity and unit price.
+select Orders.OrderID, products.productName ,products.QuantityPerUnit, products.UnitPrice
+from Orders join [order details]
+on Orders.Orderid = [order details].orderID
+join products on [Order details].productID = products.productID
+
+--4 List employees who report to other employees (manager-subordinate relationship)
+select concat(sub.lastname,' ',sub.firstName) Subordinate,concat(manager.lastname,' ',manager.firstName ) from Employees sub 
+left join Employees manager on sub.ReportsTo = manager.EmployeeID
+
+--5) Display each customer and their total order count.
+select customers.contactName, count(orders.customerID) OrderCount from customers
+join orders on customers.customerID = orders.customerID
+group by customers.contactName
+
+--6 Find the average unit price of products per category.
+select categories.categoryName, avg(products.unitPrice) AVG_CATEGORY_UNIT_PRICE from categories
+join Products on products.categoryID = categories.CategoryID
+group by categories.categoryName
+
+--7) List customers where the contact title starts with 'Owner'.
+select customers.Contactname from customers where contactTitle like 'Owner%'
+
+--8)Show the top 5 most expensive products.
+select top 5 products.ProductName from products order by unitPrice desc
+
+--9) Return the total sales amount (quantity × unit price) per order.
+select [order details].orderID, sum([order details].UnitPrice * [order details].Quantity)Total from [order details]
+group by [order details].orderId
+
+--10) Create a stored procedure that returns all orders for a given customer ID.
+go
+create or alter proc custOrders(@customerID nvarchar(5)) 
+as 
+begin
+	select * from orders where customerID = @customerID
+end
+go
+custOrders 'ALFKI'
+
+-- 11) Write a stored procedure that inserts a new product.
+create or alter proc AddProduct(@pName nvarchar(40),@psupplierID int,@pcategoryID int,@punitPrice money)
+as
+begin
+	insert into Products(productName,supplierID,CategoryID,UnitPrice) values (@pname,@psupplierID,@pcategoryID,@punitPrice)
+end
+go
+AddProduct 'laptop' ,1 ,1 ,234
+
+--12) Create a stored procedure that returns total sales per employee.
+
+select concat(employees.firstName,employees.lastName) , sum([Order Details].unitPrice*[Order Details].Quantity) from employees
+join orders on orders.employeeID = employees.EmployeeID
+join [order details] on [order details].orderID = orders.orderID
+group by concat(employees.firstName,employees.lastName)
+
+-- 13) Use a CTE to rank products by unit price within each category.
+with rankedProducts as
+(select ProductID, ProductName, UnitPrice, ROW_NUMBER() over (order by unitPrice desc) Row
+from products)
+
+select * from rankedProducts
+
+--14) Create a CTE to calculate total revenue per product and filter products with revenue > 10,000.
+
+with MostRevenueProducts as
+(select products.ProductID , products.ProductName,(([Order details].UnitPrice - [Order details].discount) * [Order details].Quantity) Revenue, 
+RANK() over (order by (([Order details].UnitPrice - [Order details].discount) * [Order details].Quantity) desc) Total from Products
+join [Order details] on [Order details].ProductID = products.productID)
+select * from MostRevenueProducts
+
+--15 Use a CTE with recursion to display employee hierarchy.
+with employeeHierarchy as 
+(select employees.employeeID ,employees.FirstName, employees.LastName, 0 as level
+from employees where employees.reportsTo is null
+union all
+select sub.employeeid,sub.firstName,sub.lastName,employeeHierarchy.level+1
+from employees sub
+inner join employeeHierarchy on sub.reportsTo = employeeHierarchy.EmployeeID
+)
+select * from employeeHierarchy

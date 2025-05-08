@@ -1,0 +1,155 @@
+  select * from products where 
+  try_cast(json_value(details,'$.spec.cpu') as nvarchar(20)) ='i7'
+
+  create proc proc_FilterProducts(@pcpu varchar(20), @pcount int out)
+  as
+  begin
+      set @pcount = (select count(*) from products where 
+	  try_cast(json_value(details,'$.spec.cpu') as nvarchar(20)) =@pcpu)
+  end
+
+ begin
+  declare @cnt int
+ exec proc_FilterProducts 'i7', @cnt out
+  print concat('The number of computers is ',@cnt)
+  end
+
+
+sp_help authors
+
+create table people
+(id int primary key,
+name nvarchar(20),
+age int)
+
+create or alter proc proc_BulkInsert(@filepath nvarchar(500))
+as
+begin
+   declare @insertQuery nvarchar(max)
+
+   set @insertQuery = 'BULK INSERT people from '''+ @filepath +'''
+   with(
+   FIRSTROW =2,
+   FIELDTERMINATOR='','',
+   ROWTERMINATOR = ''\n'')'
+   exec sp_executesql @insertQuery
+end
+
+proc_BulkInsert 'D:\Corp\GenSpark\Presidio\2025\Participants\Day3\Data.csv'
+drop proc proc_BulkInsert
+select * from people
+
+create table BulkInsertLog
+(LogId int identity(1,1) primary key,
+FilePath nvarchar(1000),
+status nvarchar(50) constraint chk_status Check(status in('Success','Failed')),
+Message nvarchar(1000),
+InsertedOn DateTime default GetDate())
+
+
+create or alter proc proc_BulkInsert(@filepath nvarchar(500))
+as
+begin
+  Begin try
+	   declare @insertQuery nvarchar(max)
+
+	   set @insertQuery = 'BULK INSERT people from '''+ @filepath +'''
+	   with(
+	   FIRSTROW =2,
+	   FIELDTERMINATOR='','',
+	   ROWTERMINATOR = ''\n'')'
+
+	   exec sp_executesql @insertQuery
+
+	   insert into BulkInsertLog(filepath,status,message)
+	   values(@filepath,'Success','Bulk insert completed')
+  end try
+  begin catch
+		 insert into BulkInsertLog(filepath,status,message)
+		 values(@filepath,'Failed',Error_Message())
+  END Catch
+end
+
+proc_BulkInsert 'C:\Users\VC\Documents\SQL Server Management Studio\data.csv'
+
+select * from BulkInsertLog
+
+truncate table people
+
+with cteAuthors
+as
+(select au_id, concat(au_fname,' ',au_lname) author_name from authors)
+
+select * from titles
+
+with titles
+as
+(select au_id, concat(au_fname,' ',au_lname) author_name from authors)
+
+select * from titles
+
+declare @page int =2, @pageSize int=10;
+with PaginatedBooks as
+( select  title_id,title, price, ROW_Number() over (order by price desc) as RowNum
+  from titles
+)
+select * from PaginatedBooks where rowNUm between((@page-1)*@pageSize) and (@page*@pageSize)
+
+--create a sp that will take the page number and size as param and print the books
+
+create procedure DispBooks(@pg_num int,@size int)
+as
+begin
+with PageinatedBooks as (select title,type,price,ROW_NUMBER() over (order by price asc) as RowNum
+from titles)
+select * from PageinatedBooks where RowNum between (@pg_num-1)*(@size+1) and (@pg_num)*(@size)
+end
+go
+DispBooks 2,5
+
+go
+create or alter procedure DispBooksOffset(@pg_num int,@size int)
+as
+begin
+select title,type,price from titles order by price desc offset @pg_num rows fetch next @size rows only
+end
+go
+DispBooksOffset 5,5
+
+go
+create or alter function calctax(@price int ,@tax int) returns float
+as
+begin
+	return (@price + (@price*(@tax/100)))
+end
+go
+select title, price ,dbo.calctax(price,15) from titles
+
+go
+create or alter function fn_tableMin(@OffsetminPrice int,@qty int) returns table
+as 
+return select top (@qty) * from titles where price>=@OffsetMinPrice order by price
+select * from dbo.fn_tableMin(14,6) 
+
+
+go
+  create function fn_tableSample(@minprice float)
+  returns table
+  as
+
+    return select title,price from titles where price>= @minprice
+
+
+drop function fn_tableSample
+
+	select * from dbo.fn_tableSample(10)
+
+--older and slower but supports more logic
+create function fn_tableSampleOld(@minprice float)
+  returns @Result table(Book_Name nvarchar(100), price float)
+  as
+  begin
+    insert into @Result select title,price from titles where price>= @minprice
+    return 
+end
+select * from dbo.fn_tableSampleOld(10)

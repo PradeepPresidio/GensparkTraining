@@ -1,0 +1,43 @@
+use pubs
+go
+
+select title,pub_name from titles join publishers on titles.pub_id = publishers.pub_id
+
+select * from publishers where pub_id not in (select distinct pub_id from titles)
+
+select * from publishers left join titles on titles.pub_id = publishers.pub_id where titles.pub_id is null
+
+select au_id,title from titleauthor left join titles on titles.title_id = titleauthor.title_id;
+select * from titles
+
+SELECT ta.au_id as author_id, t.title
+FROM titles t LEFT OUTER JOIN titleauthor ta
+On t.title_id = ta.title_id
+
+select concat(au_lname,' ' ,au_fname) Auther_name, title book_name from authors a
+join titleauthor ta on a.au_id = ta.au_id
+join titles t on ta.title_id = t.title_id
+order by 1
+
+--pub_name, book_name, order date of books
+
+select pub_name,title Book_name ,ord_date Order_date from publishers 
+join titles on titles.pub_id = publishers.pub_id
+join sales on sales.title_id = titles.title_id
+
+select pub_name ,min(ord_date) Order_date from publishers 
+left join titles on titles.pub_id = publishers.pub_id
+left join sales on sales.title_id = titles.title_id
+group by publishers.pub_name 
+
+SELECT p.pub_name, MIN(s.ord_date) AS First_Book_Sale_Date
+FROM publishers p
+JOIN titles t ON p.pub_id = t.pub_id
+JOIN sales s ON t.title_id = s.title_id
+GROUP BY p.pub_name;
+
+--book name and store address of sale
+
+select title Book_Name, stor_address Store_Address from titles
+join sales on sales.title_id = titles.title_id
+join stores on stores.stor_id  = sales.stor_id
