@@ -1,0 +1,76 @@
+-- Database: dvdrental
+
+-- DROP DATABASE IF EXISTS dvdrental;
+
+CREATE DATABASE dvdrental
+    WITH
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'English_India.1252'
+    LC_CTYPE = 'English_India.1252'
+    LOCALE_PROVIDER = 'libc'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1
+    IS_TEMPLATE = False;
+
+--1)List all films with their length and rental rate, sorted by length descending.
+select title,length,rental_rate from film order by length desc
+
+--2) Find the top 5 customers who have rented the most films.
+select concat(first_name,last_name),count(rental.customer_id) from customer join rental
+on customer.customer_id = rental.customer_id group by concat(first_name,last_name)
+order by count(rental.customer_id) desc limit 5
+
+--3) Display all films that have never been rented.
+select film.title from film 
+left join inventory on film.film_id = inventory.film_id
+left join rental on rental.inventory_id  = inventory.inventory_id
+where rental.inventory_id is null
+
+--4) List all actors who appeared in the film ‘Academy Dinosaur’.
+select concat(first_name,' ',last_name) from actor 
+join film_actor on actor.actor_id = film_actor.actor_id
+join film on film.film_id = film_actor.film_id
+where film.title = 'Academy Dinosaur'
+
+--5)List each customer along with the total number of rentals they made and the total amount paid.
+select customer.customer_id,count(rental.rental_id),sum(payment.amount) from customer
+join rental on rental.customer_id = customer.customer_id
+join payment on payment.rental_id = rental.rental_id
+group by customer.customer_id
+
+--6)Using a CTE, show the top 3 rented movies by number of rentals.
+with top3RentedMovies as
+(select film.title,RANK() over (order by count(rental.rental_id) desc ) Rented_Count from film
+join inventory on inventory.film_id = film.film_id
+join rental on rental.inventory_id = inventory.inventory_id
+group by film.title limit 3
+)
+select * from top3RentedMovies
+
+--7) Find customers who have rented more than the average number of films.
+with CustomerCount as
+(select concat(customer.first_name,' ',customer.last_name) name,count(rental_id) Count from customer
+join rental on customer.customer_id = rental.customer_id
+group by concat(customer.first_name,' ',customer.last_name)
+),
+Average as
+(select avg(Count) AvgR from CustomerCount),
+
+AboveAverage as
+(select name,count from CustomerCount
+join Average on average.AvgR < CustomerCount.count order by CustomerCount.count desc)
+
+select * from AboveAverage
+--8) Write a function that returns the total number of rentals for a given customer ID.
+
+create or replace function rentalCountByID(cust_id INT)
+returns INT as $$
+declare 
+	rental_count INT;
+begin
+select count(*) into rental_count from rental where rental.customer_id = cust_id;
+return rental_count;
+end;
+$$ language plpgsql;
+select rentalCountByID(4)

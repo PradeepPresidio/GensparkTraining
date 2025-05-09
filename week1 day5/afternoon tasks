@@ -1,0 +1,179 @@
+-- cursor-based questions
+
+do $$
+declare
+    film_rec record;
+begin
+    for film_rec in select title, length from film loop
+        if film_rec.length > 120 then
+            raise notice 'title: %', film_rec.title;
+        end if;
+    end loop;
+end;
+$$ language plpgsql;
+
+do $$
+declare
+    cust_rec record;
+    rental_count int;
+begin
+    for cust_rec in select customer_id, first_name, last_name from customer loop
+        select count(*) into rental_count from rental where rental.customer_id = cust_rec.customer_id;
+        raise notice 'customer: % %, rentals: %', cust_rec.first_name, cust_rec.last_name, rental_count;
+    end loop;
+end;
+$$ language plpgsql;
+
+do $$
+declare
+    film_rec record;
+    rental_total int;
+begin
+    for film_rec in select film_id, rental_rate from film loop
+        select count(*) into rental_total from inventory join rental using (inventory_id) where inventory.film_id = film_rec.film_id;
+        if rental_total < 5 then
+            update film set rental_rate = rental_rate + 1 where film_id = film_rec.film_id;
+        end if;
+    end loop;
+end;
+$$ language plpgsql;
+
+create or replace function films_by_category(cat_name text)
+returns text as $$
+declare
+    film_title text;
+    result text := '';
+    cur cursor for
+        select f.title from film f join film_category fc on f.film_id = fc.film_id join category c on c.category_id = fc.category_id where c.name = cat_name;
+begin
+    open cur;
+    loop
+        fetch cur into film_title;
+        exit when not found;
+        result := result || film_title || ', ';
+    end loop;
+    close cur;
+    return trim(trailing ', ' from result);
+end;
+$$ language plpgsql;
+
+do $$
+declare
+    store_rec record;
+    film_count int;
+begin
+    for store_rec in select store_id from store loop
+        select count(distinct film_id) into film_count from inventory where store_id = store_rec.store_id;
+        raise notice 'store %: % films', store_rec.store_id, film_count;
+    end loop;
+end;
+$$ language plpgsql;
+
+-- trigger-based questions
+
+create table customer_log (customer_id int, log_time timestamp default now());
+
+create or replace function log_new_customer()
+returns trigger as $$
+begin
+    insert into customer_log(customer_id) values (new.customer_id);
+    return new;
+end;
+$$ language plpgsql;
+
+create trigger trg_log_new_customer
+after insert on customer
+for each row execute function log_new_customer();
+
+create or replace function prevent_zero_payment()
+returns trigger as $$
+begin
+    if new.amount = 0 then
+        raise exception 'payment amount cannot be zero';
+    end if;
+    return new;
+end;
+$$ language plpgsql;
+
+create trigger trg_prevent_zero_payment
+before insert on payment
+for each row execute function prevent_zero_payment();
+
+create or replace function set_film_last_update()
+returns trigger as $$
+begin
+    new.last_update := now();
+    return new;
+end;
+$$ language plpgsql;
+
+create trigger trg_set_last_update
+before update on film
+for each row execute function set_film_last_update();
+
+create table inventory_log (inv_id int, action text, log_time timestamp default now());
+
+create or replace function log_inventory_change()
+returns trigger as $$
+begin
+    if tg_op = 'INSERT' then
+        insert into inventory_log(inv_id, action) values (new.inventory_id, 'insert');
+    elsif tg_op = 'DELETE' then
+        insert into inventory_log(inv_id, action) values (old.inventory_id, 'delete');
+    end if;
+    return null;
+end;
+$$ language plpgsql;
+
+create trigger trg_log_inventory
+after insert or delete on inventory
+for each row execute function log_inventory_change();
+
+create or replace function prevent_rental_if_debt()
+returns trigger as $$
+declare
+    total_due numeric;
+begin
+    select sum(amount) into total_due from payment where customer_id = new.customer_id;
+    if total_due > 50 then
+        raise exception 'customer owes more than $50';
+    end if;
+    return new;
+end;
+$$ language plpgsql;
+
+create trigger trg_prevent_debt_rental
+before insert on rental
+for each row execute function prevent_rental_if_debt();
+
+-- transaction-based questions
+
+begin;
+insert into customer (store_id, first_name, last_name, email, address_id, active, create_date) values (1, 'john', 'doe', 'john@example.com', 1, true, now()) returning customer_id into temp_id;
+insert into rental (rental_date, inventory_id, customer_id, staff_id) values (now(), 1, temp_id, 1);
+commit;
+
+begin;
+update film set rental_rate = rental_rate + 1 where film_id = 1;
+-- simulate error
+raise exception 'simulated error';
+insert into inventory (film_id, store_id) values (1, 1);
+rollback;
+
+begin;
+update inventory set store_id = 2 where inventory_id = 1;
+commit;
+
+begin;
+savepoint sp1;
+update payment set amount = amount + 5 where payment_id = 1;
+savepoint sp2;
+update payment set amount = amount + 10 where payment_id = 2;
+rollback to sp2;
+commit;
+
+begin;
+delete from payment where customer_id = 1;
+delete from rental where customer_id = 1;
+delete from customer where customer_id = 1;
+commit;
