@@ -1,0 +1,26 @@
+﻿1️ ROLLBACK Without SAVEPOINT: Will Earlier Updates Persist?
+No. If you execute multiple updates within a transaction and an error occurs (e.g., in the third statement), issuing a `ROLLBACK` without a `SAVEPOINT` will undo **all** changes made in the transaction, including the first two updates. PostgreSQL does not automatically create savepoints for each statement, so without explicitly setting one, the entire transaction is rolled back. :contentReference[oaicite:0]{index=0}
+
+2️ READ COMMITTED Isolation: Can Transaction B See Uncommitted Changes from Transaction A?
+No. Under the `READ COMMITTED` isolation level (PostgreSQL's default), a transaction only sees data that was committed before the query began. It does not see uncommitted changes from other transactions. :contentReference[oaicite:1]{index=1}
+
+3️ Concurrent Updates to the Same Row: Will One Overwrite the Other?
+No, one will not overwrite the other. When two concurrent transactions attempt to update the same row, PostgreSQL uses row-level locking to manage concurrency:
+- The first transaction to acquire the lock proceeds with the update.
+- The second transaction waits until the first transaction completes (either commits or rolls back).
+This mechanism ensures data integrity and prevents lost updates. :contentReference[oaicite:2]{index=2}
+
+4️ ROLLBACK TO SAVEPOINT: What Gets Undone?
+Executing `ROLLBACK TO SAVEPOINT after_alice;` undoes all commands executed after the specified savepoint (`after_alice`) within the current transaction. Changes made before the savepoint remain intact. :contentReference[oaicite:3]{index=3}
+
+5️ Which Isolation Level Prevents Phantom Reads in PostgreSQL?
+The `REPEATABLE READ` isolation level prevents phantom reads. At this level, a transaction sees a consistent snapshot of the database throughout its execution, ensuring that repeated queries return the same results, even if other transactions insert new rows. :contentReference[oaicite:4]{index=4}
+
+6️ Can PostgreSQL Perform a Dirty Read?
+No. PostgreSQL does not allow dirty reads. Even if a transaction is set to `READ UNCOMMITTED`, PostgreSQL treats it as `READ COMMITTED`, preventing transactions from reading uncommitted changes made by other transactions. :contentReference[oaicite:5]{index=5}
+
+7️ Autocommit ON: Are Changes Immediately Committed After an UPDATE?
+Yes. With autocommit enabled (the default in PostgreSQL), each individual statement is executed in its own transaction and is automatically committed upon successful completion. :contentReference[oaicite:6]{index=6}
+
+8️ Uncommitted UPDATE Visibility in Another Session: Will It See the Change?
+No. If you perform an `UPDATE` within a transaction and do not commit it, other sessions will not see the change. Under the `READ COMMITTED` isolation level, a session only sees data that was committed before its query began. :contentReference[oaicite:7]{index=7}
