@@ -1,0 +1,267 @@
+-- Database: dvdrental
+
+-- DROP DATABASE IF EXISTS dvdrental;
+
+CREATE DATABASE dvdrental
+    WITH
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'English_India.1252'
+    LC_CTYPE = 'English_India.1252'
+    LOCALE_PROVIDER = 'libc'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1
+    IS_TEMPLATE = False;
+
+/*
+Cursors 
+Write a cursor to list all customers and how many rentals each made. Insert these into a summary table.
+*/
+create table summary
+(
+cust_id serial,
+cust_firstname text,
+cust_lastname text,
+no_of_rentals int
+);
+-- select count(*) from rental where customer_id = 87;
+do $$
+declare
+	rec record;
+	cur cursor for
+		select customer.customer_id,customer.first_name,customer.last_name,count(rental.rental_id) rental_count
+		from customer join rental on rental.customer_id = customer.customer_id
+		group by customer.customer_id;
+begin
+open cur;
+	loop
+	fetch cur into rec;
+	exit when not found;
+		insert into summary(cust_id,cust_firstname,cust_lastname,no_of_rentals)
+		values(rec.customer_id,rec.first_name,rec.last_name,rec.rental_count);
+	end loop;
+close cur;
+end;
+$$;
+select * from summary
+/*
+Using a cursor, print the titles of films in the 'Comedy' category rented more than 10 times.
+*/
+select * from category;
+do $$
+declare 
+	rec record;
+	cur cursor for
+		select film.title,count(rental.rental_id) rental_count from film
+		join film_category on film_category.film_id = film.film_id
+		join category on category.category_id = film_category.category_id
+		join inventory on inventory.film_id = film.film_id
+		join rental on rental.inventory_id = inventory.inventory_id
+		where category.name = 'Comedy'
+		group by(film.title)
+		having count(rental.rental_id) > 10;
+begin
+open cur;
+loop
+	fetch cur into rec;
+	exit when not found;
+		raise notice 'Title : %   ,Rental Count : % ',rec.title,rec.rental_count;
+end loop;
+end; $$;
+/*Create a cursor to go througheach store and count the number of distinct films available, and insert results into a report table.*/
+drop table Reports;
+create table Reports(
+report_id serial,
+store_id int,
+film_count int
+);
+-- select  count(*) from inventory where store_id = 2
+do $$
+declare
+	rec record;
+	cur cursor for
+		select store.store_id, count(inventory.film_id) film_count from store
+		join inventory on store.store_id = inventory.store_id
+		group by(store.store_id);
+	begin
+	open cur;
+	loop
+		fetch cur into rec;
+		exit when not found;
+		insert into Reports(store_id,film_count) values (rec.store_id,rec.film_count);
+	end loop;
+end; $$; 
+select * from Reports
+/*
+Loop through all customers who haven't rented in the last 6 months and insert their details into an inactive_customers table.
+*/
+Create table Inactive_customers(
+customer_id serial,
+store_id smallint,
+first_name text,
+last_name text,
+email text,
+address_id smallint
+);
+do $$
+declare
+	rec record;
+	cur cursor for
+		select distinct customer.customer_id,customer.store_id,customer.first_name,customer.last_name,customer.email,customer.address_id
+		from customer join rental on customer.customer_id = rental.rental_id
+		where date_trunc('month' ,rental.rental_date) < date_trunc('month' ,current_date) - interval '6 months';
+begin
+open cur;
+	loop
+		fetch cur into rec;
+		exit when not found;
+		insert into Inactive_customers(customer_id,store_id,first_name,last_name,email,address_id)
+		values (rec.customer_id,rec.store_id,rec.first_name,rec.last_name,rec.email,rec.address_id);
+	end loop;
+end; $$;
+select * from Inactive_customers
+
+INSERT INTO customer 
+VALUES (5075, 2, 'Pradeep', 'SN', 'pradeep@gmail.com', 404, true, current_date, current_timestamp, 1);
+rollback;
+/*
+Write a transaction that inserts a new customer, adds their rental, and logs the payment – all atomically.
+*/
+BEGIN;
+SELECT * FROM staff;
+INSERT INTO customer 
+VALUES (5689, 2, 'Pradeep', 'SN', 'pradeep@gmail.com', 404, true, current_date, current_timestamp, 1);
+INSERT INTO rental 
+VALUES (10620459, current_timestamp, 1, 5689, current_timestamp + interval '10 days', 1, current_timestamp);
+INSERT INTO payment 
+VALUES (52349, 5689, 1, 10620459, 423.53, current_timestamp);
+COMMIT;
+
+/*
+Simulate a transaction where one update fails (e.g., invalid rental ID), and ensure the entire transaction rolls back.
+*/
+
+BEGIN;
+UPDATE rental
+SET return_date = CURRENT_TIMESTAMP
+WHERE rental_id = 1001;
+UPDATE rental
+SET return_date = 'dummy-timestamp'  
+WHERE rental_id = 1001;
+COMMIT;
+/*
+Use SAVEPOINT to update multiple payment amounts. Roll back only one payment update using ROLLBACK TO SAVEPOINT.
+*/
+
+begin;
+savepoint init;
+update payment set amount = 500 where payment_id = 17503;
+savepoint first_update_done;
+update payment set amount = -500 where payment_id = 17503;
+rollback to first_update_done;
+commit;
+select * from payment where payment_id = 17503;
+select * from inventory;
+/*
+Perform a transaction that transfers inventory from one store to another (delete + insert) safely.
+*/
+begin;
+do $$
+declare 
+inventory_details record;
+inv_id integer;
+ren_id integer;
+pay_id integer;
+begin
+select inventory_id,film_id,last_update into inventory_details from inventory where store_id = 1 and inventory_id = 1; 
+select inventory_id into inv_id from inventory where store_id = 1 and inventory_id = 1; 
+select rental_id into ren_id from rental where inventory_id = inv_id limit 1;
+select payment_id into pay_id from payment where rental_id = ren_id limit 1;
+
+delete from payment where payment_id = pay_id;
+delete from rental where rental_id = ren_id;
+delete from inventory where inventory_id = inv_id;
+loop
+exit when not found;
+insert into inventory values(inventory_details.inventory_id,inventory_details.film_id,2,inventory_details.last_update);
+end loop;
+end; $$;
+commit;
+rollback
+
+/*
+Create a transaction that deletes a customer and all associated records (rental, payment), ensuring referential integrity.
+*/
+select * from customer where customer_id = 1;
+begin;
+do $$
+begin
+delete from payment where customer_id = 1;
+delete from rental where customer_id = 1;
+delete from customer where customer_id = 1;
+
+end;$$;
+commit;
+/*
+Create a trigger to prevent inserting payments of zero or negative amount.
+*/
+CREATE OR REPLACE FUNCTION prevent_zero_or_negative_payment()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.amount <= 0 THEN
+        RAISE EXCEPTION 'Payment amount must be greater than zero. Given: %', NEW.amount;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+CREATE TRIGGER check_payment_amount
+BEFORE INSERT ON payment
+FOR EACH ROW
+EXECUTE FUNCTION prevent_zero_or_negative_payment();
+
+/*
+Set up a trigger that automatically updates last_update on the film table when the title or rental rate is changed.
+*/
+create or replace function auto_update_last_update()
+returns trigger as $$ 
+begin
+	if new.title is distinct from old.title or new.rental_rate is distinct from old.rental_rate then
+	new.last_update  := now();
+	end if;
+	return new;
+
+end;
+$$ language plpgsql;
+
+create trigger update_last_update
+after update on film
+for each row
+execute function auto_update_last_update();
+/*
+Write a trigger that inserts a log into rental_log whenever a film is rented more than 3 times in a week.
+*/
+create table rental_Log(
+rental_id integer,
+rental_date timestamp,
+film_id integer,
+rented_count integer
+)
+create or replace function add_frequent_rental_log()
+returns trigger as $$
+declare
+	prev_count integer;
+	film_id integer;
+begin
+	select inventory.film_id into film_id from inventory where inventory_id = new.inventory_id;
+	select count(*) into prev_count from rental join inventory on 
+	inventory.inventory_id = rental.inventory_id where inventory.film_id = film_id;
+	if prev_count > 3 then
+	insert into rental_log values (new.rental_id,current_timestamp,film_id,prev_count+1);
+	end if;
+	return new;
+end;
+$$ language plpgsql;
+create trigger frequent_rental_log
+after insert on rental
+for each row
+execute function add_frequent_rental_log()
