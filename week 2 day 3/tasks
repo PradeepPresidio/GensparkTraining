@@ -1,0 +1,58 @@
+-- Database: demo
+
+-- DROP DATABASE IF EXISTS demo;
+
+CREATE DATABASE demo
+    WITH
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'English_India.1252'
+    LC_CTYPE = 'English_India.1252'
+    LOCALE_PROVIDER = 'libc'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1
+    IS_TEMPLATE = False;
+
+	CREATE TABLE rental_log (
+    log_id SERIAL PRIMARY KEY,
+    rental_time TIMESTAMP,
+    customer_id INT,
+    film_id INT,
+    amount NUMERIC,
+    logged_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+SELECT * FROM rental_log;
+
+CREATE OR REPLACE PROCEDURE sp_add_rental_log(
+    p_customer_id INT,
+    p_film_id INT,
+    p_amount NUMERIC
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    INSERT INTO rental_log (rental_time, customer_id, film_id, amount)
+    VALUES (CURRENT_TIMESTAMP, p_customer_id, p_film_id, p_amount);
+EXCEPTION WHEN OTHERS THEN
+    RAISE NOTICE 'Error occurred: %', SQLERRM;
+END;
+$$;
+CALL sp_add_rental_log(1, 100, 4.99);
+CREATE TABLE rental_log_updates (
+    log_id INT,
+    old_amount NUMERIC,
+    new_amount NUMERIC,
+    changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE OR REPLACE FUNCTION log_rental_update()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO rental_log_updates (log_id, old_amount, new_amount)
+    VALUES (OLD.log_id, OLD.amount, NEW.amount);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+CREATE TRIGGER trg_log_rental_update
+AFTER UPDATE ON rental_log
+FOR EACH ROW
+EXECUTE FUNCTION log_rental_update();
