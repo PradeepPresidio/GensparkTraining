@@ -45,8 +45,7 @@ begin
 	values('customer','email',OLD.email,NEW.email,current_Timestamp);
 	return new;
 end;
-$$ language plpgsql
-
+$$ language plpgsql\
 
 create trigger trg_log_customer_email_Change
 before update
