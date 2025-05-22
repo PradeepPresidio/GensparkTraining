@@ -1,0 +1,15 @@
+C:\Users\VC\source\repos\GensparkTraining\week3 day 4\SolidPrinciples\obj\Debug\net9.0\SolidPrinciples.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\VC\source\repos\GensparkTraining\week3 day 4\SolidPrinciples\obj\Debug\net9.0\SolidPrinciples.AssemblyInfoInputs.cache
+C:\Users\VC\source\repos\GensparkTraining\week3 day 4\SolidPrinciples\obj\Debug\net9.0\SolidPrinciples.AssemblyInfo.cs
+C:\Users\VC\source\repos\GensparkTraining\week3 day 4\SolidPrinciples\obj\Debug\net9.0\SolidPrinciples.csproj.CoreCompileInputs.cache
+C:\Users\VC\source\repos\GensparkTraining\week3 day 4\SolidPrinciples\obj\Debug\net9.0\SolidPrinciples.sourcelink.json
+C:\Users\VC\source\repos\GensparkTraining\week3 day 4\SolidPrinciples\bin\Debug\net9.0\SolidPrinciples.exe
+C:\Users\VC\source\repos\GensparkTraining\week3 day 4\SolidPrinciples\bin\Debug\net9.0\SolidPrinciples.deps.json
+C:\Users\VC\source\repos\GensparkTraining\week3 day 4\SolidPrinciples\bin\Debug\net9.0\SolidPrinciples.runtimeconfig.json
+C:\Users\VC\source\repos\GensparkTraining\week3 day 4\SolidPrinciples\bin\Debug\net9.0\SolidPrinciples.dll
+C:\Users\VC\source\repos\GensparkTraining\week3 day 4\SolidPrinciples\bin\Debug\net9.0\SolidPrinciples.pdb
+C:\Users\VC\source\repos\GensparkTraining\week3 day 4\SolidPrinciples\obj\Debug\net9.0\SolidPrinciples.dll
+C:\Users\VC\source\repos\GensparkTraining\week3 day 4\SolidPrinciples\obj\Debug\net9.0\refint\SolidPrinciples.dll
+C:\Users\VC\source\repos\GensparkTraining\week3 day 4\SolidPrinciples\obj\Debug\net9.0\SolidPrinciples.pdb
+C:\Users\VC\source\repos\GensparkTraining\week3 day 4\SolidPrinciples\obj\Debug\net9.0\SolidPrinciples.genruntimeconfig.cache
+C:\Users\VC\source\repos\GensparkTraining\week3 day 4\SolidPrinciples\obj\Debug\net9.0\ref\SolidPrinciples.dll

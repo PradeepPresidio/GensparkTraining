@@ -134,7 +134,15 @@ class EmployeePromotion
         if (!EmployeeDict.ContainsKey(modif_key))
         {
             Console.WriteLine("No employee found with that key");
+            return;
         }
+        Console.WriteLine("Provide employee details to overwrite");
+        int new_age;
+        string new_name;
+        double new_salary;
+        Console.WriteLine("")
+        EmployeeDict[modif_key].Age 
+
     }
     static void Main()
     {
