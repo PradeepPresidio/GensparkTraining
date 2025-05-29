@@ -1,7 +1,6 @@
 namespace FirstAPI.Models
 {
 
-
     public class Doctor
     {
         public int Id { get; set; }
@@ -9,7 +8,7 @@ namespace FirstAPI.Models
         public string Status { get; set; } = string.Empty;
         public float YearsOfExperience { get; set; }
         public ICollection<DoctorSpeciality>? DoctorSpecialities { get; set; }
-         public ICollection<Appointmnet>? Appointmnets { get; set; }
+         public ICollection<Appointment>? Appointments { get; set; }
 
     }
 }

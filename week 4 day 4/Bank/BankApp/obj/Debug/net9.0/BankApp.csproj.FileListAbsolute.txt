@@ -1,0 +1,6 @@
+C:\Users\VC\source\repos\GensparkTraining\week 4 day 4\Bank\BankApp\obj\Debug\net9.0\BankApp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\VC\source\repos\GensparkTraining\week 4 day 4\Bank\BankApp\obj\Debug\net9.0\BankApp.AssemblyInfoInputs.cache
+C:\Users\VC\source\repos\GensparkTraining\week 4 day 4\Bank\BankApp\obj\Debug\net9.0\BankApp.AssemblyInfo.cs
+C:\Users\VC\source\repos\GensparkTraining\week 4 day 4\Bank\BankApp\obj\Debug\net9.0\BankApp.csproj.CoreCompileInputs.cache
+C:\Users\VC\source\repos\GensparkTraining\week 4 day 4\Bank\BankApp\obj\Debug\net9.0\BankApp.sourcelink.json
+C:\Users\VC\source\repos\GensparkTraining\week 4 day 4\Bank\BankApp\obj\Debug\net9.0\BankApp.csproj.AssemblyReference.cache

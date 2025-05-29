@@ -22,9 +22,9 @@ namespace FirstAPI.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("FirstAPI.Models.Appointmnet", b =>
+            modelBuilder.Entity("FirstAPI.Models.Appointment", b =>
                 {
-                    b.Property<string>("AppointmnetNumber")
+                    b.Property<string>("AppointmentNumber")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("AppointmnetDateTime")
@@ -40,14 +40,14 @@ namespace FirstAPI.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("AppointmnetNumber")
+                    b.HasKey("AppointmentNumber")
                         .HasName("PK_AppointmentNumber");
 
                     b.HasIndex("DoctorId");
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("Appointmnets");
+                    b.ToTable("Appointments");
                 });
 
             modelBuilder.Entity("FirstAPI.Models.Doctor", b =>
@@ -146,17 +146,39 @@ namespace FirstAPI.Migrations
                     b.ToTable("Specialities");
                 });
 
-            modelBuilder.Entity("FirstAPI.Models.Appointmnet", b =>
+            modelBuilder.Entity("FirstAPI.Models.User", b =>
+                {
+                    b.Property<int>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserId"));
+
+                    b.Property<int>("FollwerId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("UserId");
+
+                    b.HasIndex("FollwerId");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("FirstAPI.Models.Appointment", b =>
                 {
                     b.HasOne("FirstAPI.Models.Doctor", "Doctor")
-                        .WithMany("Appointmnets")
+                        .WithMany("Appointments")
                         .HasForeignKey("DoctorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("FK_Appoinment_Doctor");
 
                     b.HasOne("FirstAPI.Models.Patient", "Patient")
-                        .WithMany("Appointmnets")
+                        .WithMany("Appointments")
                         .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
@@ -188,21 +210,38 @@ namespace FirstAPI.Migrations
                     b.Navigation("Speciality");
                 });
 
+            modelBuilder.Entity("FirstAPI.Models.User", b =>
+                {
+                    b.HasOne("FirstAPI.Models.User", "UserFollower")
+                        .WithMany("Followers")
+                        .HasForeignKey("FollwerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_Followers");
+
+                    b.Navigation("UserFollower");
+                });
+
             modelBuilder.Entity("FirstAPI.Models.Doctor", b =>
                 {
-                    b.Navigation("Appointmnets");
+                    b.Navigation("Appointments");
 
                     b.Navigation("DoctorSpecialities");
                 });
 
             modelBuilder.Entity("FirstAPI.Models.Patient", b =>
                 {
-                    b.Navigation("Appointmnets");
+                    b.Navigation("Appointments");
                 });
 
             modelBuilder.Entity("FirstAPI.Models.Speciality", b =>
                 {
                     b.Navigation("DoctorSpecialities");
+                });
+
+            modelBuilder.Entity("FirstAPI.Models.User", b =>
+                {
+                    b.Navigation("Followers");
                 });
 #pragma warning restore 612, 618
         }

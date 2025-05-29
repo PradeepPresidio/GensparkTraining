@@ -3360,25 +3360,31 @@
     ]
   },
   "packageFolders": {
-    "/Users/gayathrimahadevan/.nuget/packages/": {}
+    "C:\\Users\\VC\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/gayathrimahadevan/Desktop/APIApps/Genspark2025/Day18/FirstAPI/FirstAPI.csproj",
+      "projectUniqueName": "C:\\Users\\VC\\source\\repos\\GensparkTraining\\week 4 day 3\\project\\FirstAPI\\FirstAPI.csproj",
       "projectName": "FirstAPI",
-      "projectPath": "/Users/gayathrimahadevan/Desktop/APIApps/Genspark2025/Day18/FirstAPI/FirstAPI.csproj",
-      "packagesPath": "/Users/gayathrimahadevan/.nuget/packages/",
-      "outputPath": "/Users/gayathrimahadevan/Desktop/APIApps/Genspark2025/Day18/FirstAPI/obj/",
+      "projectPath": "C:\\Users\\VC\\source\\repos\\GensparkTraining\\week 4 day 3\\project\\FirstAPI\\FirstAPI.csproj",
+      "packagesPath": "C:\\Users\\VC\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\VC\\source\\repos\\GensparkTraining\\week 4 day 3\\project\\FirstAPI\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "/Users/gayathrimahadevan/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\VC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
-        "/usr/local/share/dotnet/library-packs": {},
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -3396,7 +3402,8 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "9.0.200"
     },
     "frameworks": {
       "net8.0": {
@@ -3440,7 +3447,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.410/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

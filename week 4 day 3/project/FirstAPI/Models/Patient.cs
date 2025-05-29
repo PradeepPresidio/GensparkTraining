@@ -7,7 +7,7 @@ namespace FirstAPI.Models
         public int Age { get; set; }
         public string Email { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;
-        public ICollection<Appointmnet>? Appointmnets { get; set; }
+        public ICollection<Appointment>? Appointments { get; set; }
     }
    
 }

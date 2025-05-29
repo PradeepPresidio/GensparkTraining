@@ -1,3 +1,5 @@
+using FirstAPI.Models;
+using Microsoft.EntityFrameworkCore;
 namespace FirstAPI.Contexts
 {
     public class ClinicContext : DbContext
@@ -9,7 +11,7 @@ namespace FirstAPI.Contexts
         }
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Doctor> Doctors { get; set; }
-        public DbSet<Appointmnet> Appointmnets { get; set; }
+        public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Speciality> Specialities { get; set; }
         public DbSet<DoctorSpeciality> DoctorSpecialities { get; set; }
 
@@ -24,17 +26,18 @@ namespace FirstAPI.Contexts
                                         .HasForeignKey(u => u.FollwerId)
                                         .HasConstraintName("FK_Followers")
                                         .OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<Doctor>.HasKey(doc=>doc.Id);
-            modelBuilder.Entity<Appointmnet>().HasKey(app => app.AppointmnetNumber).HasName("PK_AppointmentNumber");
 
-            modelBuilder.Entity<Appointmnet>().HasOne(app => app.Patient)
-                                              .WithMany(p => p.Appointmnets)
+            modelBuilder.Entity<Doctor>().HasKey(doc=>doc.Id);
+            modelBuilder.Entity<Appointment>().HasKey(app => app.AppointmentNumber).HasName("PK_AppointmentNumber");
+
+            modelBuilder.Entity<Appointment>().HasOne(app => app.Patient)
+                                              .WithMany(p => p.Appointments)
                                               .HasForeignKey(app => app.PatientId)
                                               .HasConstraintName("FK_Appoinment_Patient")
                                               .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Appointmnet>().HasOne(app => app.Doctor)
-                                              .WithMany(d => d.Appointmnets)
+            modelBuilder.Entity<Appointment>().HasOne(app => app.Doctor)
+                                              .WithMany(d => d.Appointments)
                                               .HasForeignKey(app => app.DoctorId)
                                               .HasConstraintName("FK_Appoinment_Doctor")
                                               .OnDelete(DeleteBehavior.Restrict);

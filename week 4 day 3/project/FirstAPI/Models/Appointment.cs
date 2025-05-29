@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FirstAPI.Models
 {
-    public class Appointmnet
+    public class Appointment
     {
     
-        public string AppointmnetNumber { get; set; } = string.Empty;
+        public string AppointmentNumber { get; set; } = string.Empty;
         public int PatientId { get; set; }
         public int DoctorId { get; set; }
         public DateTime AppointmnetDateTime { get; set; }

@@ -7,7 +7,7 @@ namespace FirstAPI.Repositories
 {
 	public class DoctorSpecialityRepository : Repository<int, DoctorSpeciality>
 	{
-		protected DoctorSpecialityRepository(ClinicContext clinicContext) : base(clinicContext)
+		public DoctorSpecialityRepository(ClinicContext clinicContext) : base(clinicContext)
 		{
 		}
 
@@ -26,5 +26,4 @@ namespace FirstAPI.Repositories
 			return (await doctorSpeciality.ToListAsync());
 		}
 	}
-}
 }
