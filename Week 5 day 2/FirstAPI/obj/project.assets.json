@@ -2946,25 +2946,24 @@
     ]
   },
   "packageFolders": {
-    "/Users/gayathrimahadevan/.nuget/packages/": {}
+    "/Users/presidio/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/gayathrimahadevan/Desktop/APIApps/Genspark2025/Day18/FirstAPI/FirstAPI.csproj",
+      "projectUniqueName": "/Users/presidio/Documents/Genspark Training/GensparkTraining/Week 5 day 2/FirstAPI/FirstAPI.csproj",
       "projectName": "FirstAPI",
-      "projectPath": "/Users/gayathrimahadevan/Desktop/APIApps/Genspark2025/Day18/FirstAPI/FirstAPI.csproj",
-      "packagesPath": "/Users/gayathrimahadevan/.nuget/packages/",
-      "outputPath": "/Users/gayathrimahadevan/Desktop/APIApps/Genspark2025/Day18/FirstAPI/obj/",
+      "projectPath": "/Users/presidio/Documents/Genspark Training/GensparkTraining/Week 5 day 2/FirstAPI/FirstAPI.csproj",
+      "packagesPath": "/Users/presidio/.nuget/packages/",
+      "outputPath": "/Users/presidio/Documents/Genspark Training/GensparkTraining/Week 5 day 2/FirstAPI/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/gayathrimahadevan/.nuget/NuGet/NuGet.Config"
+        "/Users/presidio/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
-        "/usr/local/share/dotnet/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -2982,7 +2981,8 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net8.0": {
@@ -3034,7 +3034,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.410/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.300/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

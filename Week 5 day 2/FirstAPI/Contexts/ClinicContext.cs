@@ -20,12 +20,7 @@ namespace FirstAPI.Contexts
         public DbSet<User> Users { get; set; }
         public DbSet<DoctorsBySpecialityResponseDto> DoctorsBySpeciality{ get; set; }
 
-        public async Task<List<DoctorsBySpecialityResponseDto>> GetDoctorsBySpeciality(string speciality)
-        {
-            return await this.Set<DoctorsBySpecialityResponseDto>()
-                        .FromSqlInterpolated($"select * from proc_GetDoctorsBySpeciality({speciality})")
-                        .ToListAsync();
-        }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Patient>().HasOne(p => p.User)

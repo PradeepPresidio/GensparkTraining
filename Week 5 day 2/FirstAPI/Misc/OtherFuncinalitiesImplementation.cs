@@ -1,7 +1,7 @@
 using FirstAPI.Models.DTOs.DoctorSpecialities;
 using FirstAPI.Contexts;
 using FirstAPI.Interfaces;
-
+using System;
 
 namespace FirstAPI.Misc
 {
@@ -16,8 +16,22 @@ namespace FirstAPI.Misc
 
         public async Task<ICollection<DoctorsBySpecialityResponseDto>> GetDoctorsBySpeciality(string specilaity)
         {
-            var result = await _clinicContext.GetDoctorsBySpeciality(specilaity);
-            return result;
+            Console.WriteLine("In OtherFuncionalitiesImplementation");
+            return new List<DoctorsBySpecialityResponseDto>
+            {
+                new DoctorsBySpecialityResponseDto
+                {
+                    Id = 1,
+                    Dname = "Dr. Smith",
+                    Yoe = 10
+                },
+                new DoctorsBySpecialityResponseDto
+                {
+                    Id = 2,
+                    Dname = "Dr. Jones",
+                    Yoe = 5
+                }
+            };
         }
     }
 }

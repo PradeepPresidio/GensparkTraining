@@ -108,11 +108,32 @@ namespace FirstAPI.Services
         {
             throw new NotImplementedException();
         }
-
+        public static DoctorsBySpecialityResponseDto MapDoctorSpeciality(Doctor doctor)
+        {
+            return new DoctorsBySpecialityResponseDto
+            {
+                Id = doctor.Id,
+                Dname = doctor.Name,
+                Yoe = doctor.YearsOfExperience,
+            };
+        }
         public async Task<ICollection<DoctorsBySpecialityResponseDto>> GetDoctorsBySpeciality(string speciality)
         {
-            var result = await _otherContextFunctionities.GetDoctorsBySpeciality(speciality);
-            return result;
+            var specialityId = _specialityRepository.GetAll()
+                .Result.FirstOrDefault(s => s.Name.ToLower() == speciality.ToLower())?.Id;
+            Console.WriteLine($"Speciality Id: {specialityId}");
+            var doctors = await _doctorRepository.GetAll();
+            Console.WriteLine($"Doctors Count: {doctors.Count()}");
+            doctors = doctors.Where(d => d.DoctorSpecialities != null && d.DoctorSpecialities.Any(s => s.SpecialityId == specialityId));
+            Console.WriteLine($"Docttt {doctors.Count()}");
+            doctors = doctors.ToList();
+            ICollection<DoctorsBySpecialityResponseDto> response = new List<DoctorsBySpecialityResponseDto>();
+            foreach (var doctor in doctors)
+            {
+                var doctorResponse = DoctorService.MapDoctorSpeciality(doctor);
+                response.Add(doctorResponse);
+            }
+            return response;
         }
     }
 }

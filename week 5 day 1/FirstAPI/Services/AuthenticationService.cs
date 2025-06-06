@@ -41,7 +41,9 @@ namespace FirstAPI.Services
                 if (encryptedData.EncryptedData[i] != dbUser.Password[i])
                 {
                     _logger.LogError("Invalid login attempt");
-                    throw new Exception("Invalid password");
+                    var indbstr =  System.Text.Encoding.Default.GetString(encryptedData.EncryptedData);
+                    var reqstr = System.Text.Encoding.Default.GetString(dbUser.Password);
+                    throw new Exception($"Invalid password {indbstr} \n {reqstr}");
                 }
             }
             var token = await _tokenService.GenerateToken(dbUser);

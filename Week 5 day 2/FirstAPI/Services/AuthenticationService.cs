@@ -3,7 +3,9 @@ using FirstAPI.Interfaces;
 using FirstAPI.Models;
 using FirstAPI.Models.DTOs.DoctorSpecialities;
 using Microsoft.Extensions.Logging;
-
+using System;
+using System.Text;
+using System.Security.Cryptography;
 namespace FirstAPI.Services
 {
     public class AuthenticationService : IAuthenticationService
@@ -38,6 +40,7 @@ namespace FirstAPI.Services
             });
             for (int i = 0; i < encryptedData.EncryptedData.Length; i++)
             {
+                _logger.LogInformation($"Comparing encrypted data at index {i}: {BitConverter.ToString(encryptedData.EncryptedData).Replace("-", "").ToLowerInvariant()} with dbUser password at index {i}: {dbUser.Password[2]} {BitConverter.ToString(dbUser.Password).Replace("-", "").ToLowerInvariant()} {dbUser.Password.Length}");
                 if (encryptedData.EncryptedData[i] != dbUser.Password[i])
                 {
                     _logger.LogError("Invalid login attempt");

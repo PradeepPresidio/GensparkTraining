@@ -20,10 +20,10 @@ namespace FirstAPI.Repositories
 
         public override async Task<IEnumerable<Doctor>> GetAll()
         {
-            var doctors = _clinicContext.Doctors;
+            var doctors =  _clinicContext.Doctors.Include(d => d.DoctorSpecialities).ThenInclude(ds => ds.Speciality).ToList();
             if (doctors.Count() == 0)
                 throw new Exception("No Doctor in the database");
-            return (await doctors.ToListAsync());
+            return (doctors);   
         }
     }
 }
