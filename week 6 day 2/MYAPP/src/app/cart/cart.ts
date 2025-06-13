@@ -14,7 +14,7 @@ export class Cart {
   {
     setTimeout(() => {
     if (this.products) {
-      this.counter = this.products.counter;
+      // this.counter = this.products.counter;
     }
   });
   }

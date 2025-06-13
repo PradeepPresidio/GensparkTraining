@@ -1,4 +1,13 @@
 <p>products works!</p>
-<p>{{counter}}</p>
-<button (click)="increment()">increment</button>
-<button (click)="decrement()">decrement</button>
+@if (products) {
+    <div>
+        @for (item of products; track item.id) {
+            <app-product [product]="item"></app-product>
+        }
+    </div>
+}
+@else {
+    <div>
+        No products available
+    </div>
+}

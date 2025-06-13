@@ -1,24 +1,30 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ProductService } from '../services/product.service';
+import { ProductModel } from '../models/product';
+import { Product } from "../product/product";
+
 
 @Component({
   selector: 'app-products',
+  imports: [Product],
   templateUrl: './products.html',
-  styleUrls: ['./products.css'],
-  standalone : true
+  styleUrl: './products.css'
 })
-export class Products {
-  counter: number = 0;
+export class Products implements OnInit {
+  products:ProductModel[]|undefined=undefined;
+  constructor(private productService:ProductService){
 
-  increment(): void {
-    console.log("Hi");
-    this.counter++;
+  }
+  ngOnInit(): void {
+    this.productService.getAllProducts().subscribe(
+      {
+        next:(data:any)=>{
+         this.products = data.products as ProductModel[];
+        },
+        error:(err)=>{},
+        complete:()=>{}
+      }
+    )
   }
 
-  decrement(): void {
-    this.counter--;
-  }
-
-  reset(): void {
-    this.counter = 0;
-  }
 }

@@ -1,14 +1,12 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 import { Products } from './products/products';
-import { Cart } from './cart/cart';
+import { RecipeList } from './recipe-list/recipe-list';
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet,Products,Cart],
   templateUrl: './app.html',
   styleUrl: './app.css',
-  standalone : true
+  imports: [ Products,RecipeList]
 })
 export class App {
-  protected title = 'MYAPP';
+  protected title = 'myApp';
 }
