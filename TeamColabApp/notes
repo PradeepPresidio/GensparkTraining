@@ -1,0 +1,63 @@
+Models
+    Project
+        ProjectId
+        Title
+        Description
+        ICollection<User> Members
+        User TeamLeader
+        status
+        priority
+        ICollection<pdfFormat> pdfDocuments
+        isActive
+        CreatedAt
+        UpdatedAt
+        startDate
+        endDate
+
+    User
+        UserId
+        Username
+        Password
+        HashKey
+        role
+        isActive
+    Task
+        TaskId
+        TaskName
+        Project ProjectId
+        ICollection<User> AssignedTo
+        status
+        priority
+        startDate
+        endDate
+        CreatedAt
+        UpdatedAt
+        isActive
+        Comment Comment
+
+    Comment 
+        CommentId
+        Content
+        User UserId
+        Project ProjectId
+        Task TaskId
+        CreatedDate
+        UpdatedDate
+
+    File
+        FileId
+        FileName
+        FilePath
+        FileSize
+        FileType
+        UploadedBy UserId
+        UploadedDate
+        Task TaskId
+        isDeleted
+
+    Notification
+        NotificationId
+        User UserId
+        Content
+        CreatedDate
+        Type
