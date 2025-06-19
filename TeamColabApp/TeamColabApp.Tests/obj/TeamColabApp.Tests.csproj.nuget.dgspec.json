@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/presidio/Documents/Genspark Training/TeamColabApp/TeamColabApp.Tests/TeamColabApp.Tests.csproj": {}
+    "/Users/presidio/Documents/Genspark Training/GensparkTraining/TeamColabApp/TeamColabApp.Tests/TeamColabApp.Tests.csproj": {}
   },
   "projects": {
-    "/Users/presidio/Documents/Genspark Training/TeamColabApp/TeamColabApp.Tests/TeamColabApp.Tests.csproj": {
+    "/Users/presidio/Documents/Genspark Training/GensparkTraining/TeamColabApp/TeamColabApp.Tests/TeamColabApp.Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/presidio/Documents/Genspark Training/TeamColabApp/TeamColabApp.Tests/TeamColabApp.Tests.csproj",
+        "projectUniqueName": "/Users/presidio/Documents/Genspark Training/GensparkTraining/TeamColabApp/TeamColabApp.Tests/TeamColabApp.Tests.csproj",
         "projectName": "TeamColabApp.Tests",
-        "projectPath": "/Users/presidio/Documents/Genspark Training/TeamColabApp/TeamColabApp.Tests/TeamColabApp.Tests.csproj",
+        "projectPath": "/Users/presidio/Documents/Genspark Training/GensparkTraining/TeamColabApp/TeamColabApp.Tests/TeamColabApp.Tests.csproj",
         "packagesPath": "/Users/presidio/.nuget/packages/",
-        "outputPath": "/Users/presidio/Documents/Genspark Training/TeamColabApp/TeamColabApp.Tests/obj/",
+        "outputPath": "/Users/presidio/Documents/Genspark Training/GensparkTraining/TeamColabApp/TeamColabApp.Tests/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/presidio/.nuget/NuGet/NuGet.Config"
@@ -26,8 +26,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "/Users/presidio/Documents/Genspark Training/TeamColabApp/TeamColabApp/TeamColabApp.csproj": {
-                "projectPath": "/Users/presidio/Documents/Genspark Training/TeamColabApp/TeamColabApp/TeamColabApp.csproj"
+              "/Users/presidio/Documents/Genspark Training/GensparkTraining/TeamColabApp/TeamColabApp/TeamColabApp.csproj": {
+                "projectPath": "/Users/presidio/Documents/Genspark Training/GensparkTraining/TeamColabApp/TeamColabApp/TeamColabApp.csproj"
               }
             }
           }
@@ -97,14 +97,14 @@
         }
       }
     },
-    "/Users/presidio/Documents/Genspark Training/TeamColabApp/TeamColabApp/TeamColabApp.csproj": {
+    "/Users/presidio/Documents/Genspark Training/GensparkTraining/TeamColabApp/TeamColabApp/TeamColabApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/presidio/Documents/Genspark Training/TeamColabApp/TeamColabApp/TeamColabApp.csproj",
+        "projectUniqueName": "/Users/presidio/Documents/Genspark Training/GensparkTraining/TeamColabApp/TeamColabApp/TeamColabApp.csproj",
         "projectName": "TeamColabApp",
-        "projectPath": "/Users/presidio/Documents/Genspark Training/TeamColabApp/TeamColabApp/TeamColabApp.csproj",
+        "projectPath": "/Users/presidio/Documents/Genspark Training/GensparkTraining/TeamColabApp/TeamColabApp/TeamColabApp.csproj",
         "packagesPath": "/Users/presidio/.nuget/packages/",
-        "outputPath": "/Users/presidio/Documents/Genspark Training/TeamColabApp/TeamColabApp/obj/",
+        "outputPath": "/Users/presidio/Documents/Genspark Training/GensparkTraining/TeamColabApp/TeamColabApp/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/presidio/.nuget/NuGet/NuGet.Config"

@@ -4708,11 +4708,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/presidio/Documents/Genspark Training/TeamColabApp/TeamColabApp/TeamColabApp.csproj",
+      "projectUniqueName": "/Users/presidio/Documents/Genspark Training/GensparkTraining/TeamColabApp/TeamColabApp/TeamColabApp.csproj",
       "projectName": "TeamColabApp",
-      "projectPath": "/Users/presidio/Documents/Genspark Training/TeamColabApp/TeamColabApp/TeamColabApp.csproj",
+      "projectPath": "/Users/presidio/Documents/Genspark Training/GensparkTraining/TeamColabApp/TeamColabApp/TeamColabApp.csproj",
       "packagesPath": "/Users/presidio/.nuget/packages/",
-      "outputPath": "/Users/presidio/Documents/Genspark Training/TeamColabApp/TeamColabApp/obj/",
+      "outputPath": "/Users/presidio/Documents/Genspark Training/GensparkTraining/TeamColabApp/TeamColabApp/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/presidio/.nuget/NuGet/NuGet.Config"

@@ -1,0 +1,53 @@
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label>Username:</label>
+    <input type="text" formControlName="username" />
+    <div *ngIf="userForm.get('username')?.touched && userForm.get('username')?.invalid">
+      <small *ngIf="userForm.get('username')?.errors?.['required']">Username is required</small>
+      <small *ngIf="userForm.get('username')?.errors?.['minlength']">Minimum 5 characters</small>
+    </div>
+    <div *ngIf="userForm.errors?.['invalidName'] && userForm.get('username')?.touched">
+      <small>Username is not allowed</small>
+    </div>
+  </div>
+
+  <div>
+    <label>Email:</label>
+    <input type="email" formControlName="email" />
+    <div *ngIf="userForm.get('email')?.touched && userForm.get('email')?.invalid">
+      <small *ngIf="userForm.get('email')?.errors?.['required']">Email is required</small>
+      <small *ngIf="userForm.get('email')?.errors?.['email']">Invalid email</small>
+    </div>
+  </div>
+
+  <div>
+    <label>Role:</label>
+    <select formControlName="role">
+      <option value="">Select role</option>
+      <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+    </select>
+    <div *ngIf="userForm.get('role')?.touched && userForm.get('role')?.invalid">
+      <small>Role is required</small>
+    </div>
+  </div>
+
+  <div>
+    <label>Password:</label>
+    <input type="password" formControlName="password" />
+    <div *ngIf="userForm.get('password')?.touched && userForm.get('password')?.invalid">
+      <small *ngIf="userForm.get('password')?.errors?.['required']">Password is required</small>
+      <small *ngIf="userForm.get('password')?.errors?.['minlength']">Minimum 6 characters</small>
+      <small *ngIf="userForm.get('password')?.errors?.['pattern']">Must include number and symbol</small>
+    </div>
+  </div>
+
+  <div>
+    <label>Confirm Password:</label>
+    <input type="password" formControlName="confirmPassword" />
+    <div *ngIf="userForm.errors?.['passwordMismatch'] && userForm.get('confirmPassword')?.touched">
+      <small>Passwords do not match</small>
+    </div>
+  </div>
+
+  <button type="submit">Submit</button>
+</form>
